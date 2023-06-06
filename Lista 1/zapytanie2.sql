@@ -1,0 +1,2 @@
+USE chinook;
+DESCRIBE track;

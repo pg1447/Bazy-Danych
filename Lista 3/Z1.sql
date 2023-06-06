@@ -1,0 +1,88 @@
+USE Zad1
+GO
+--DROP TABLE Rok2004
+CREATE TABLE Rok2004(
+	miesiac int  CONSTRAINT P1 CHECK (0<miesiac AND miesiac<13),
+	wynik decimal (10,2)
+)
+--DROP TABLE Rok2005
+CREATE TABLE Rok2005(
+	miesiac int  CONSTRAINT P2 CHECK (0<miesiac AND miesiac<13),
+	wynik decimal (10,2)
+)
+
+
+INSERT INTO Rok2004 VALUES (1,211)
+INSERT INTO Rok2004 VALUES (2,2121)
+INSERT INTO Rok2004 VALUES (3,5)
+INSERT INTO Rok2004 VALUES (4,532)
+INSERT INTO Rok2004 VALUES (5,6464)
+INSERT INTO Rok2004 VALUES (6,554)
+INSERT INTO Rok2004 VALUES (7,5234)
+INSERT INTO Rok2004 VALUES (8,4324)
+INSERT INTO Rok2004 VALUES (9,123)
+INSERT INTO Rok2004 VALUES (10,554)
+INSERT INTO Rok2004 VALUES (11,456537)
+INSERT INTO Rok2004 VALUES (12,457)
+
+--SELECT * 
+--FROM Rok2004
+
+
+INSERT INTO Rok2005 VALUES (1,65)
+INSERT INTO Rok2005 VALUES (2,11)
+INSERT INTO Rok2005 VALUES (3,5)
+INSERT INTO Rok2005 VALUES (4,8654)
+INSERT INTO Rok2005 VALUES (5,876)
+INSERT INTO Rok2005 VALUES (6,543)
+INSERT INTO Rok2005 VALUES (7,1234)
+INSERT INTO Rok2005 VALUES (8,432)
+INSERT INTO Rok2005 VALUES (9,21)
+INSERT INTO Rok2005 VALUES (10,54)
+INSERT INTO Rok2005 VALUES (11,187)
+INSERT INTO Rok2005 VALUES (12,1544)
+
+
+--SELECT *
+--FROM Rok2005
+
+
+GO
+--DROP FUNCTION Maxx
+
+CREATE FUNCTION Maxx()
+RETURNS @tab TABLE (Miesiac int, Rok int, Wynik decimal (10,2))
+AS
+BEGIN 
+	DECLARE @licznikM int =1;
+	
+	WHILE @licznikM<13
+	begin
+	DECLARE @temp1 decimal (10,2)=(SELECT TOP 1 wynik
+									FROM Rok2004
+									WHERE miesiac=@licznikM)
+	DECLARE @temp2 decimal (10,2)=(SELECT TOP 1 wynik
+									FROM Rok2005
+									WHERE miesiac=@licznikM)
+	if @temp1>@temp2
+	BEGIN
+		INSERT  @tab (Miesiac, Rok, Wynik)  SELECT TOP 1 @licznikM, 2004, wynik
+												FROM Rok2004
+												WHERE miesiac=@licznikM
+
+	END ELSE 
+	BEGIN	
+		INSERT  @tab (Miesiac, Rok, Wynik) SELECT TOP 1 @licznikM, 2005, wynik
+												FROM Rok2005
+												WHERE miesiac=@licznikM
+		END				
+		SET @licznikM=@licznikM+1;
+		
+	END
+	RETURN 
+END
+GO
+
+SELECT *
+FROM Maxx ()
+GO
